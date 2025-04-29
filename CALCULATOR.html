@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculateur d'IMC 🧮</title>
+  <style>
+    :root {
+      --main-bg: #1f2937;
+      --card-bg: #111827;
+      --accent: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --text: #f9fafb;
+      --muted: #9ca3af;
+      --font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: var(--font);
+      background: linear-gradient(120deg, #0f172a, #1e3a8a);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      background-color: var(--card-bg);
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+      max-width: 400px;
+      width: 90%;
+    }
+
+    h1 {
+      text-align: center;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      margin: 1rem 0 0.5rem;
+      color: var(--muted);
+    }
+
+    input {
+      width: 100%;
+      padding: 0.8rem;
+      border-radius: 8px;
+      border: none;
+      font-size: 1rem;
+    }
+
+    button {
+      margin-top: 1.5rem;
+      width: 100%;
+      padding: 0.9rem;
+      border: none;
+      background-color: var(--accent);
+      color: white;
+      font-weight: bold;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color: #059669;
+    }
+
+    .result {
+      margin-top: 2rem;
+      padding: 1rem;
+      background-color: #1e293b;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 1.2rem;
+    }
+
+    .status {
+      font-weight: bold;
+    }
+
+    .status.normal { color: var(--accent); }
+    .status.warning { color: var(--warning); }
+    .status.danger { color: var(--danger); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Calculateur d'IMC</h1>
+    <label for="weight">Poids (kg)</label>
+    <input type="number" id="weight" placeholder="ex: 70" min="1" />
+    
+    <label for="height">Taille (cm)</label>
+    <input type="number" id="height" placeholder="ex: 175" min="50" />
+
+    <button onclick="calculerIMC()">Calculer mon IMC</button>
+
+    <div id="result" class="result" style="display:none;"></div>
+  </div>
+
+  <script>
+    function calculerIMC() {
+      const poids = parseFloat(document.getElementById('weight').value);
+      const tailleCm = parseFloat(document.getElementById('height').value);
+      const resultDiv = document.getElementById('result');
+
+      if (!poids || !tailleCm || poids <= 0 || tailleCm <= 0) {
+        resultDiv.innerHTML = "<span class='status danger'>Veuillez entrer des valeurs valides.</span>";
+        resultDiv.style.display = "block";
+        return;
+      }
+
+      const tailleM = tailleCm / 100;
+      const imc = poids / (tailleM * tailleM);
+      const imcArrondi = imc.toFixed(1);
+
+      let interpretation = '';
+      let statusClass = '';
+
+      if (imc < 18.5) {
+        interpretation = "Maigreur";
+        statusClass = "danger";
+      } else if (imc < 25) {
+        interpretation = "Poids normal";
+        statusClass = "normal";
+      } else if (imc < 30) {
+        interpretation = "Surpoids";
+        statusClass = "warning";
+      } else {
+        interpretation = "Obésité";
+        statusClass = "danger";
+      }
+
+      resultDiv.innerHTML = `Votre IMC est <strong>${imcArrondi}</strong><br><span class="status ${statusClass}">${interpretation}</span>`;
+      resultDiv.style.display = "block";
+    }
+  </script>
+</body>
+</html>
